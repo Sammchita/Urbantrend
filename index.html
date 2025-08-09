@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanBoutique | Modern Online Shopping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #4a6ee0;
+            --secondary: #f8f9fa;
+            --accent: #f4a261;
+            --dark: #212529;
+            --light: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .header {
+            background-color: var(--light);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, rgba(74,110,224,0.9) 0%, rgba(42,65,155,0.9) 100%);
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+            background-color: var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .search-container {
+            transition: all 0.3s ease;
+        }
+        
+        .search-container:focus-within {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .badge {
+            font-size: 0.6rem;
+            top: -5px;
+            right: -5px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 80%;
+                transition: all 0.3s ease;
+                background-color: var(--light);
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .cart-sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="header">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <button id="menu-btn" class="md:hidden mr-4 text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="flex items-center">
+    <button id="menu-btn" class="md:hidden mr-4 text-2xl">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="#" class="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-300">
+  <img src="logo/urban trends logo.png" alt="UrbanBoutique Logo" class="h-10 w-auto block" />
+  <span class="text-2xl font-bold text-gray-800">
+    Urban<span class="text-blue-600">Boutique <br><br> </span> 
+  </span>
+</a>
+</div>
+                
+                <div class="hidden md:flex nav-links space-x-6">
+                    <a href="#" class="font-medium hover:text-blue-600">Home</a>
+                    <a href="#" class="font-medium hover:text-blue-600">Shop</a>
+                    <a href="#" class="font-medium hover:text-blue-600">New Arrivals</a>
+                    <a href="#" class="font-medium hover:text-blue-600">Collections</a>
+                    <a href="#" class="font-medium hover:text-blue-600">Contact</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative search-container hidden md:block">
+                        <input type="text" placeholder="Search products..." class="py-2 px-4 rounded-full border border-gray-300 focus:outline-none">
+                        <button class="absolute right-3 top-2 text-gray-500">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <button id="search-btn" class="md:hidden text-xl">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    
+                    <button id="cart-btn" class="relative">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute badge bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
+                    
+                    <button class="hidden md:block">
+                        <i class="fas fa-user-circle text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Search -->
+            <div class="mt-3 search-container hidden" id="mobile-search">
+                <input type="text" placeholder="Search products..." class="w-full py-2 px-4 rounded-full border border-gray-300 focus:outline-none">
+            </div>
+        </div>
+    </header>
+    
+    
+    <!-- Mobile Menu -->
+    <div class="nav-links fixed h-screen flex flex-col p-6 space-y-4" id="mobile-menu">
+        <a href="#" class="font-medium hover:text-blue-600">Home</a>
+        <a href="#" class="font-medium hover:text-blue-600">Shop</a>
+        <a href="#" class="font-medium hover:text-blue-600">New Arrivals</a>
+        <a href="#" class="font-medium hover:text-blue-600">Collections</a>
+        <a href="#" class="font-medium hover:text-blue-600">Contact</a>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero py-16 md:py-24">
+        <div class="container mx-auto px-4 hero-content">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Summer Collection 2023</h1>
+                    <p class="text-xl mb-6 opacity-90">Discover our premium selection of clothing and accessories designed for the modern urban lifestyle.</p>
+                    <button class="bg-white text-blue-600 px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition">Shop Now</button>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1f5d0f19-2d11-4b61-80e2-e58b83a21608.png" alt="Stylish man and woman posing in fashionable summer outfits against urban background" class="rounded-lg shadow-xl">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Categories -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Shop by Category</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="category-card relative overflow-hidden rounded-lg group">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a7b498b3-c965-4762-9733-b97eb377ef60.png" alt="Men's fashion collection with shirts, jackets and accessories" class="w-full h-40 md:h-56 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-20 transition">
+                        <h3 class="text-white text-xl font-bold">Men</h3>
+                    </div>
+                </div>
+                
+                <div class="category-card relative overflow-hidden rounded-lg group">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b372e474-c9ac-4887-844d-ae322ef2d7eb.png" alt="Women's dresses, tops and accessories arranged neatly" class="w-full h-40 md:h-56 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-20 transition">
+                        <h3 class="text-white text-xl font-bold">Women</h3>
+                    </div>
+                </div>
+                
+                <div class="category-card relative overflow-hidden rounded-lg group">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c6c42fd0-7343-4568-b7b0-a8cdfd7cab44.png" alt="Various watches displayed on wooden surface" class="w-full h-40 md:h-56 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-20 transition">
+                        <h3 class="text-white text-xl font-bold">Accessories</h3>
+                    </div>
+                </div>
+                
+                <div class="category-card relative overflow-hidden rounded-lg group">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/440d87bd-b323-4f6e-af1a-c7f9e0fd844b.png" alt="Assortment of leather bags and backpacks on display" class="w-full h-40 md:h-56 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-20 transition">
+                        <h3 class="text-white text-xl font-bold">Bags</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Featured Products</h2>
+                <a href="#" class="text-blue-600 font-medium">View All</a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0e49a0e5-6974-4d83-9d99-a8b7b166001a.png" alt="Black slim-fit shirt with contrast stitching detail" class="w-full h-64 object-cover">
+                        <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">SALE</div>
+                        <button class="absolute bottom-0 left-0 right-0 bg-black text-white py-2 opacity-0 hover:opacity-100 transition duration-300 add-to-cart-btn">Add to Cart</button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1">Classic Black Shirt</h3>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-blue-600 font-bold">$39.99</span>
+                                <span class="text-gray-400 text-sm line-through">$49.99</span>
+                            </div>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="text-sm ml-1">4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/46b84570-2209-4a11-9f4f-f1a1f861eeb2.png" alt="White minimalist sneakers with gum sole" class="w-full h-64 object-cover">
+                        <button class="absolute bottom-0 left-0 right-0 bg-black text-white py-2 opacity-0 hover:opacity-100 transition duration-300 add-to-cart-btn">Add to Cart</button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1">Minimalist White Sneakers</h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-blue-600 font-bold">$89.99</span>
+                            </div>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="text-sm ml-1">4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cc49576e-77fa-4be6-9d82-f0d007d5e81a.png" alt="Blue denim jeans with distressed details" class="w-full h-64 object-cover">
+                        <button class="absolute bottom-0 left-0 right-0 bg-black text-white py-2 opacity-0 hover:opacity-100 transition duration-300 add-to-cart-btn">Add to Cart</button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1">Distressed Denim Jeans</h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-blue-600 font-bold">$59.99</span>
+                            </div>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="text-sm ml-1">4.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e52d7693-9696-4650-bb44-0eed90cec64b.png" alt="Black leather wallet with multiple card slots" class="w-full h-64 object-cover">
+                        <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">NEW</div>
+                        <button class="absolute bottom-0 left-0 right-0 bg-black text-white py-2 opacity-0 hover:opacity-100 transition duration-300 add-to-cart-btn">Add to Cart</button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1">Leather Card Wallet</h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-blue-600 font-bold">$34.99</span>
+                            </div>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="text-sm ml-1">4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="py-12 bg-blue-600 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0 md:w-1/2">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">Join Our Newsletter</h2>
+                    <p>Subscribe to get exclusive offers, new arrivals and fashion tips.</p>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address" class="flex-grow py-3 px-4 rounded-l-full focus:outline-none text-gray-800">
+                        <button class="bg-blue-800 px-6 py-3 rounded-r-full font-medium hover:bg-blue-900 transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">UrbanBoutique</h3>
+                    <p class="text-gray-400">Premium fashion for the modern urban lifestyle.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Men's Collection</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Women's Collection</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Accessories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">New Arrivals</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Shipping & Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Size Guide</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 UrbanBoutique. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar fixed top-0 right-0 h-full w-96 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Your Cart</h2>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="cart-items space-y-4">
+                <!-- Cart items will be added here dynamically -->
+                <div class="text-center py-12">
+                    <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Your cart is empty</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-6 pt-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Subtotal</span>
+                    <span class="font-bold">$0.00</span>
+                </div>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition mt-4" disabled>Checkout</button>
+                <a href="#" class="block text-center text-blue-600 mt-2 hover:text-blue-700">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+    
+    <script>
+        // Toggle mobile menu
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.querySelector('.overlay');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        });
+        
+        // Toggle search on mobile
+        const searchBtn = document.getElementById('search-btn');
+        const mobileSearch = document.getElementById('mobile-search');
+        
+        searchBtn.addEventListener('click', () => {
+            mobileSearch.classList.toggle('hidden');
+        });
+        
+        // Shopping cart functionality
+        const cartBtn = document.getElementById('cart-btn');
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+        
+        let cartItems = [];
+        let cartCount = 0;
+        
+        cartBtn.addEventListener('click', () => {
+            cartSidebar.classList.add('open');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        });
+        
+        closeCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
+        
+        overlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            mobileMenu.classList.remove('active');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
+        
+        // Sample product data
+        const products = [
+            {
+                id: 1,
+                name: 'Classic Black Shirt',
+                price: 39.99,
+                originalPrice: 49.99,
+                image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/af289ea2-07b7-41f1-906d-9c29f4c8fae1.png',
+                alt: 'Black slim-fit shirt with contrast stitching detail',
+                rating: 4.7
+            },
+            {
+                id: 2,
+                name: 'Minimalist White Sneakers',
+                price: 89.99,
+                image: 'https://placehold.co/400x400',
+                alt: 'White minimalist sneakers with gum sole',
+                rating: 4.9
+            },
+            {
+                id: 3,
+                name: 'Distressed Denim Jeans',
+                price: 59.99,
+                image: 'https://placehold.co/400x400',
+                alt: 'Blue denim jeans with distressed details',
+                rating: 4.5
+            },
+            {
+                id: 4,
+                name: 'Leather Card Wallet',
+                price: 34.99,
+                image: 'https://placehold.co/400x400',
+                alt: 'Black leather wallet with multiple card slots',
+                rating: 4.8
+            }
+        ];
+        
+        // Add to cart functionality
+        addToCartBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                const product = products[index];
+                addToCart(product);
+            });
+        });
+        
+        function addToCart(product) {
+            const existingItem = cartItems.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            cartCount += 1;
+            updateCart();
+        }
+        
+        function updateCart() {
+            // Update cart count badge
+            document.querySelector('#cart-btn .badge').textContent = cartCount;
+            
+            // Update cart items display
+            const cartItemsContainer = document.querySelector('.cart-items');
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">Your cart is empty</p>
+                    </div>
+                `;
+                
+                document.querySelector('.cart-sidebar button[disabled]').disabled = true;
+                document.querySelector('.cart-sidebar button[disabled]').classList.remove('hover:bg-blue-700');
+                return;
+            }
+            
+            let itemsHTML = '';
+            let subtotal = 0;
+            
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                itemsHTML += `
+                    <div class="cart-item flex py-4 border-b border-gray-200">
+                        <div class="w-20 h-20 mr-4">
+                            <img src="${item.image}" alt="${item.alt}" class="w-full h-full object-cover rounded">
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-sm text-gray-500">$${item.price.toFixed(2)}</p>
+                            <div class="flex items-center mt-2">
+                                <button class="quantity-btn bg-gray-200 w-6 h-6 rounded-full" data-id="${item.id}">-</button>
+                                <span class="mx-2">${item.quantity}</span>
+                                <button class="quantity-btn bg-gray-200 w-6 h-6 rounded-full" data-id="${item.id}">+</button>
+                                <button class="ml-auto text-red-500 remove-btn" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItemsContainer.innerHTML = itemsHTML;
+            document.querySelector('.cart-sidebar button[disabled]').disabled = false;
+            document.querySelector('.cart-sidebar button[disabled]').classList.add('hover:bg-blue-700');
+            document.querySelector('.cart-sidebar .font-bold').textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Add event listeners to quantity buttons
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    const item = cartItems.find(item => item.id === id);
+                    
+                    if (e.target.textContent === '+') {
+                        item.quantity += 1;
+                        cartCount += 1;
+                    } else if (item.quantity > 1) {
+                        item.quantity -= 1;
+                        cartCount -= 1;
+                    }
+                    
+                    updateCart();
+                });
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.closest('.remove-btn').dataset.id);
+                    const itemIndex = cartItems.findIndex(item => item.id === id);
+                    
+                    if (itemIndex !== -1) {
+                        cartCount -= cartItems[itemIndex].quantity;
+                        cartItems.splice(itemIndex, 1);
+                        updateCart();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
